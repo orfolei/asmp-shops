@@ -13,11 +13,15 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Sender {
+    public static final Logger LOGGER = LoggerFactory.getLogger("AtriocSMP Log");
+
     static Gson gson = new Gson();
 
     public static void sendDeleteRequest(WaystoneDataHolder waystone) {
@@ -42,11 +46,16 @@ public class Sender {
                 post.setEntity(postString);
                 post.setHeader("Content-Type", "application/json");
 
+                LOGGER.info("Sending delete request");
+                LOGGER.info("Post URL: {}", post.getURI().toString());
+                LOGGER.info("Request Body: {}", requestBody);
+                LOGGER.info("Post String: {}", postString);
+
                 client.execute(post);
-                Utils.debug("Sent delete request for " + requestBody);
+                LOGGER.info(("Delete request sent"));
             } catch (Exception e) {
                 e.printStackTrace();
-                Utils.debug(e.getMessage());
+                LOGGER.error(e.getMessage());
             }
         }).start();
     }
@@ -68,15 +77,19 @@ public class Sender {
             try(CloseableHttpClient client = HttpClientBuilder.create().build()) {
                 DataUploadPacket packet = new DataUploadPacket(shops,waystones);
                 StringEntity postString = new StringEntity(gson.toJson(packet), ContentType.APPLICATION_JSON);
-                Utils.debug(gson.toJson(packet));
+
                 post.setEntity(postString);
                 post.setHeader("Content-Type", "application/json");
 
+                LOGGER.info("Post URL: {}", post.getURI().toString());
+                LOGGER.info("Request Body: {}", gson.toJson(packet));
+                LOGGER.info("Post String: {}", postString);
+
                 client.execute(post);
-                Utils.debug("Sent cached shops & waystone data.");
+                LOGGER.info("Shop & waystone data request sent.");
             } catch (Exception e) {
                 e.printStackTrace();
-                Utils.debug(e.getMessage());
+                LOGGER.error(e.getMessage());
             }
         }).start();
     }
