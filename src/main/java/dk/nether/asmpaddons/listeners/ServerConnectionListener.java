@@ -14,7 +14,7 @@ public class ServerConnectionListener {
     }
 
     private void onJoinServer(ServerPlayNetworkHandler handler, PacketSender sender, MinecraftServer server) {
-        String serverIp = ModConfig.get().serverIp;
+        String serverIp = AsmpAddons.getConfig().serverIp;
         boolean isModServer = server.getServerIp().equals(serverIp);
 
         AsmpAddons.getState().setOnServer(isModServer);

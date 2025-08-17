@@ -64,8 +64,8 @@ public class ServerValidator {
     }
 
     public static void getServerData() {
-        String shopJson = downloadUrl(AsmpAddons.s_Config.shopRoute);
-        String waystoneJson = downloadUrl(AsmpAddons.s_Config.waystoneRoute);
+        String shopJson = downloadUrl(AsmpAddons.getConfig().shopRoute);
+        String waystoneJson = downloadUrl(AsmpAddons.getConfig().waystoneRoute);
 
         Type shopListType = new TypeToken<List<ShopDataHolder>>() {}.getType();
         s_ServerShops = gson.fromJson(shopJson, shopListType);

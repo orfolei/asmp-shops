@@ -26,7 +26,7 @@ public class VersionManagement {
         scheduler = Executors.newScheduledThreadPool(1);
     }
 
-    public VersionManagement start() {
+    public void start() {
         scheduler.scheduleAtFixedRate(() -> {
             if (!AsmpAddons.getState().isActive()) return;
 
@@ -35,8 +35,6 @@ public class VersionManagement {
 
             VersionManagement.checkAndWarnVersion(client.player);
         }, 0, 300, TimeUnit.SECONDS);
-
-        return this;
     }
 
     public static void checkAndWarnVersion(PlayerEntity player) {

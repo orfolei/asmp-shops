@@ -35,7 +35,7 @@ public class Sender {
 
         String requestBody = String.format("{\"type\":\"shop\",\"data\":%s}", dataJson);
 
-        HttpPost post = new HttpPost(AsmpAddons.s_Config.deleteRoute);
+        HttpPost post = new HttpPost(AsmpAddons.getConfig().deleteRoute);
         new Thread(() -> {
             try(CloseableHttpClient client = HttpClientBuilder.create().build()) {
                 StringEntity postString = new StringEntity(requestBody, ContentType.APPLICATION_JSON);
@@ -60,7 +60,7 @@ public class Sender {
             return;
         }
 
-        ModConfig config = AsmpAddons.s_Config;
+        ModConfig config = AsmpAddons.getConfig();
         if(config.postUrl == null || config.postUrl.isEmpty()) return;
 
         HttpPost post = new HttpPost(config.postUrl);

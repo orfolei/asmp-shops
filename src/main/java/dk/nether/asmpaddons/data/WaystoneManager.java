@@ -46,7 +46,7 @@ public class WaystoneManager {
 
     public static void waystoneTick(MinecraftClient client) {
 
-        if(!AsmpAddons.s_Config.trackWaystones) return;
+        if(!AsmpAddons.getConfig().trackWaystones) return;
 
         if(client.currentScreen instanceof HandledScreen<?> screen) {
 

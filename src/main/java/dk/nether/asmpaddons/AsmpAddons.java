@@ -10,6 +10,8 @@ import dk.nether.asmpaddons.core.exceptions.ShopException;
 import dk.nether.asmpaddons.data.WaystoneManager;
 import dk.nether.asmpaddons.listeners.ServerConnectionListener;
 import dk.nether.asmpaddons.utils.Utils;
+import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.block.BlockState;
@@ -32,18 +34,19 @@ import java.util.regex.Pattern;
 
 public class AsmpAddons implements ModInitializer {
 
-    static final String VERSION = "1.1.0";
-    static final String VERSION_URL = "https://kreiseljustus.com/asmp_version.txt";
+    public static final String VERSION = "1.1.0";
+    public static final String VERSION_URL = "https://kreiseljustus.com/asmp_version.txt";
 
     public static ModConfig s_Config;
     public static PlayerEntity s_Player;
 
     private static AsmpAddons instance;
 
+    private ModConfig config;
+    private ModState state;
     private ServerConnectionListener serverConnectionListener;
     private VersionManagement versionManagement;
 
-    private ModState state;
 
     int tickInServer = 0;
 
@@ -53,29 +56,31 @@ public class AsmpAddons implements ModInitializer {
 
     public AsmpAddons() {
         instance = this;
-
-        ModConfig.register();
-        s_Config = ModConfig.get();
     }
 
     @Override
     public void onInitialize() {
+        AutoConfig.register(ModConfig.class, GsonConfigSerializer::new);
+        this.config = AutoConfig.getConfigHolder(ModConfig.class).getConfig();
+
         this.state = new ModState();
-        this.versionManagement = new VersionManagement().start();
+        this.versionManagement = new VersionManagement();
 
         this.registerListeners();
+        this.versionManagement.start();
+
 
         Thread fetcherThread = new Thread(() -> {
             while (true) {
                 try {
-                    if(!ModConfig.get().enable) Thread.sleep(s_Config.fetcherThreadInterval);
+                    if(!config.enable) Thread.sleep(config.fetcherThreadInterval);
                     ServerValidator.getServerData();
                 } catch (Exception e) {
                     Utils.debug("This will crash minecraft");
                 }
 
                 try {
-                    Thread.sleep(s_Config.fetcherThreadInterval);
+                    Thread.sleep(config.fetcherThreadInterval);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                     break;
@@ -98,7 +103,6 @@ public class AsmpAddons implements ModInitializer {
 
 
     public void onClientTick(MinecraftClient client) {
-        s_Config = ModConfig.get();
         if(!state.isActive()) return;
         if(client.player == null) return;
 
@@ -109,7 +113,7 @@ public class AsmpAddons implements ModInitializer {
             checkedVersionOnStartup = true;
         }
 
-        if(s_Config.ticksBetweenSends < 400) s_Config.ticksBetweenSends = 600;
+        if(config.ticksBetweenSends < 400) config.ticksBetweenSends = 600;
 
         ChunkPos currentChunkPosition = new ChunkPos(s_Player.getBlockPos());
 
@@ -119,7 +123,7 @@ public class AsmpAddons implements ModInitializer {
         }
 
         //We should send our data because our timer is done
-        if(tickInServer % s_Config.ticksBetweenSends == 0) {
+        if(tickInServer % config.ticksBetweenSends == 0) {
             if(!VersionManagement.s_UsingLatestVersion) {Utils.debug("Discarding- not up-to date!"); tickInServer++; return;}
             Utils.debug("Attempting to send cached shops");
 
@@ -131,6 +135,10 @@ public class AsmpAddons implements ModInitializer {
         tickInServer++;
     }
 
+    public static ModConfig getConfig() {
+        return instance.config;
+    }
+
     public static ModState getState() {
         return instance.state;
     }
@@ -138,7 +146,7 @@ public class AsmpAddons implements ModInitializer {
     public void onEnterNewChunk(ChunkPos currentChunk) {
         Utils.debug("Entered new chunk");
 
-        if(s_Config.trackShops) {
+        if(config.trackShops) {
             handleShopDetection(currentChunk);
         }
     }

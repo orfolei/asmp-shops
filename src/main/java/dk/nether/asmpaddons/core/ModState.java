@@ -1,5 +1,6 @@
 package dk.nether.asmpaddons.core;
 
+import dk.nether.asmpaddons.AsmpAddons;
 import dk.nether.asmpaddons.ModConfig;
 
 public class ModState {
@@ -17,10 +18,10 @@ public class ModState {
     }
 
     public boolean isActive() {
-        if (!ModConfig.get().enable) {
+        if (!AsmpAddons.getConfig().enable) {
             return false;
         }
 
-        return ModConfig.get().allowOnAllServers || this.onServer;
+        return AsmpAddons.getConfig().allowOnAllServers || this.onServer;
     }
 }

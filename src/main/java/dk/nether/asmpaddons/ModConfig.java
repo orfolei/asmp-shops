@@ -8,6 +8,10 @@ import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 
 @Config(name = "asmpshopget")
 public class ModConfig implements ConfigData {
+    public ModConfig() {
+        AutoConfig.register(ModConfig.class, GsonConfigSerializer::new);
+    }
+
     @ConfigEntry.Category("General")
     @ConfigEntry.Gui.Tooltip
     public boolean enable = true;
@@ -39,9 +43,5 @@ public class ModConfig implements ConfigData {
     public String deleteRoute = "https://kreiseljustus.com/asmp/api/delete";
 
 
-    public static void register() {
-        AutoConfig.register(ModConfig.class, GsonConfigSerializer::new);
-    }
 
-    public static ModConfig get() {return AutoConfig.getConfigHolder(ModConfig.class).getConfig();}
 }
