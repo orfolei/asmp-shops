@@ -1,8 +1,13 @@
-package dk.nether.asmpaddons;
+package dk.nether.asmpaddons.core;
 
 import com.google.gson.Gson;
+import dk.nether.asmpaddons.AsmpAddons;
+import dk.nether.asmpaddons.ModConfig;
+import dk.nether.asmpaddons.utils.Utils;
 import dk.nether.asmpaddons.data.ShopDataHolder;
 import dk.nether.asmpaddons.data.ShopDataManager;
+import dk.nether.asmpaddons.data.WaystoneDataHolder;
+import dk.nether.asmpaddons.data.WaystoneManager;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;

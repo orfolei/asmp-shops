@@ -1,5 +1,8 @@
-package dk.nether.asmpaddons;
+package dk.nether.asmpaddons.core;
 
+import dk.nether.asmpaddons.AsmpAddons;
+import dk.nether.asmpaddons.utils.Utils;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
 
@@ -7,12 +10,34 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class VersionManagment {
+public class VersionManagement {
     public static boolean s_UsingLatestVersion;
     private static boolean s_WarningGiven = false;
+
+    private final ScheduledExecutorService scheduler;
+
+    public VersionManagement() {
+        scheduler = Executors.newScheduledThreadPool(1);
+    }
+
+    public VersionManagement start() {
+        scheduler.scheduleAtFixedRate(() -> {
+            if (!AsmpAddons.getState().isActive()) return;
+
+            MinecraftClient client = MinecraftClient.getInstance();
+            if (client == null || client.player == null) return;
+
+            VersionManagement.checkAndWarnVersion(client.player);
+        }, 0, 300, TimeUnit.SECONDS);
+
+        return this;
+    }
 
     public static void checkAndWarnVersion(PlayerEntity player) {
         if(!isOldVersion()) {s_UsingLatestVersion = true; Utils.debug("Using latest version!"); return;}

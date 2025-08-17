@@ -1,5 +1,7 @@
-package dk.nether.asmpaddons;
+package dk.nether.asmpaddons.data;
 
+import dk.nether.asmpaddons.AsmpAddons;
+import dk.nether.asmpaddons.utils.Utils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.item.ItemStack;

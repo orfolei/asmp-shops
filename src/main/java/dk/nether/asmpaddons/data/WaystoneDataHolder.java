@@ -1,4 +1,4 @@
-package dk.nether.asmpaddons;
+package dk.nether.asmpaddons.data;
 
 import org.jetbrains.annotations.NotNull;
 

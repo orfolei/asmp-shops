@@ -1,6 +1,7 @@
-package dk.nether.asmpaddons;
+package dk.nether.asmpaddons.core;
 
 import dk.nether.asmpaddons.data.ShopDataHolder;
+import dk.nether.asmpaddons.data.WaystoneDataHolder;
 
 import java.util.List;
 

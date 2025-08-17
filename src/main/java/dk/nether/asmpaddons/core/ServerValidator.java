@@ -1,8 +1,11 @@
-package dk.nether.asmpaddons;
+package dk.nether.asmpaddons.core;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+import dk.nether.asmpaddons.AsmpAddons;
+import dk.nether.asmpaddons.utils.Utils;
 import dk.nether.asmpaddons.data.ShopDataHolder;
+import dk.nether.asmpaddons.data.WaystoneDataHolder;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

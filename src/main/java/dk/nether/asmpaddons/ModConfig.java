@@ -12,7 +12,7 @@ public class ModConfig implements ConfigData {
     @ConfigEntry.Gui.Tooltip
     public boolean enable = true;
     @ConfigEntry.Category("General")
-    public String serverIp = "https://kreiseljustus.com/asmp/post";
+    public String serverIp = "asmp.cc";
     @ConfigEntry.Category("Tracking")
     @ConfigEntry.Gui.Tooltip
     public boolean trackShops = true;

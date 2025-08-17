@@ -1,10 +1,15 @@
 package dk.nether.asmpaddons;
 
 import dk.nether.asmpaddons.core.ModState;
+import dk.nether.asmpaddons.core.Sender;
+import dk.nether.asmpaddons.core.ServerValidator;
+import dk.nether.asmpaddons.core.VersionManagement;
 import dk.nether.asmpaddons.data.ShopDataHolder;
 import dk.nether.asmpaddons.data.ShopDataManager;
 import dk.nether.asmpaddons.core.exceptions.ShopException;
+import dk.nether.asmpaddons.data.WaystoneManager;
 import dk.nether.asmpaddons.listeners.ServerConnectionListener;
+import dk.nether.asmpaddons.utils.Utils;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.block.BlockState;
@@ -22,9 +27,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 
 import java.util.*;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -39,10 +41,9 @@ public class AsmpAddons implements ModInitializer {
     private static AsmpAddons instance;
 
     private ServerConnectionListener serverConnectionListener;
+    private VersionManagement versionManagement;
 
     private ModState state;
-
-    ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
     int tickInServer = 0;
 
@@ -60,9 +61,9 @@ public class AsmpAddons implements ModInitializer {
     @Override
     public void onInitialize() {
         this.state = new ModState();
+        this.versionManagement = new VersionManagement().start();
 
         this.registerListeners();
-        this.registerVersionChecker();
 
         Thread fetcherThread = new Thread(() -> {
             while (true) {
@@ -93,28 +94,18 @@ public class AsmpAddons implements ModInitializer {
         ClientTickEvents.END_CLIENT_TICK.register(WaystoneManager::waystoneTick);
     }
 
-    private void registerVersionChecker() {
-        scheduler.scheduleAtFixedRate(() -> {
-            if (!state.isActive()) return;
 
-            MinecraftClient client = MinecraftClient.getInstance();
-            if (client == null || client.player == null) return;
-
-            VersionManagment.checkAndWarnVersion(client.player);
-        }, 0, 300, TimeUnit.SECONDS);
-    }
 
 
     public void onClientTick(MinecraftClient client) {
         s_Config = ModConfig.get();
         if(!state.isActive()) return;
         if(client.player == null) return;
-        if(!s_Config.allowOnAllServers && !Utils.onASMP()) return;
 
         s_Player = client.player;
 
         if(!checkedVersionOnStartup) {
-            VersionManagment.checkAndWarnVersion(client.player);
+            VersionManagement.checkAndWarnVersion(client.player);
             checkedVersionOnStartup = true;
         }
 
@@ -129,7 +120,7 @@ public class AsmpAddons implements ModInitializer {
 
         //We should send our data because our timer is done
         if(tickInServer % s_Config.ticksBetweenSends == 0) {
-            if(!VersionManagment.s_UsingLatestVersion) {Utils.debug("Discarding- not up-to date!"); tickInServer++; return;}
+            if(!VersionManagement.s_UsingLatestVersion) {Utils.debug("Discarding- not up-to date!"); tickInServer++; return;}
             Utils.debug("Attempting to send cached shops");
 
             Sender.sendCachedData();
