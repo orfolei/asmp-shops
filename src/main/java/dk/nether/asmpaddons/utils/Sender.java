@@ -62,7 +62,10 @@ public class Sender {
 
     public static void sendCachedData() {
         List<ShopDataHolder> shops = new ArrayList<>(ShopDataManager.s_CachedShops);
-        List<WaystoneDataHolder> waystones = new ArrayList<>(WaystoneManager.s_CachedWaystones);
+
+        // TODO: Enable waystone data when duplicate entries have been fixed
+        // List<WaystoneDataHolder> waystones = new ArrayList<>(WaystoneManager.s_CachedWaystones);
+        List<WaystoneDataHolder> waystones = new ArrayList<>();
 
         if(shops.isEmpty() && waystones.isEmpty()) {
             Utils.debug("No cached data to send");
