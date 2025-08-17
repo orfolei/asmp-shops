@@ -1,6 +1,8 @@
 package dk.nether.asmpaddons;
 
 import com.google.gson.Gson;
+import dk.nether.asmpaddons.data.ShopDataHolder;
+import dk.nether.asmpaddons.data.ShopDataManager;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;

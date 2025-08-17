@@ -1,15 +1,10 @@
-package dk.nether.asmpaddons;
+package dk.nether.asmpaddons.data;
 
+import dk.nether.asmpaddons.core.exceptions.ShopException;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.Objects;
-
-class ShopException extends Exception {
-    ShopException() {
-        super("Failed to create shop data");
-    }
-}
 
 public class ShopDataHolder {
     public String Owner;

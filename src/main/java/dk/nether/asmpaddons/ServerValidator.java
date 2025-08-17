@@ -2,6 +2,7 @@ package dk.nether.asmpaddons;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+import dk.nether.asmpaddons.data.ShopDataHolder;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
