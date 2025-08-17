@@ -8,10 +8,6 @@ import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 
 @Config(name = "asmpshopget")
 public class ModConfig implements ConfigData {
-    public ModConfig() {
-        AutoConfig.register(ModConfig.class, GsonConfigSerializer::new);
-    }
-
     @ConfigEntry.Category("General")
     @ConfigEntry.Gui.Tooltip
     public boolean enable = true;
