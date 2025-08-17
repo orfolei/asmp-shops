@@ -122,7 +122,9 @@ public class AsmpAddons implements ModInitializer {
             lastChunkPosition = currentChunkPosition;
         }
 
-        //We should send our data because our timer is done
+        // We should send our data because our timer is done
+        // TODO: Re-enable this (disabled for safety while testing)
+        /*
         if(tickInServer % config.ticksBetweenSends == 0) {
             if(!VersionManagement.s_UsingLatestVersion) {Utils.debug("Discarding- not up-to date!"); tickInServer++; return;}
             Utils.debug("Attempting to send cached shops");
@@ -130,7 +132,7 @@ public class AsmpAddons implements ModInitializer {
             Sender.sendCachedData();
             ShopDataManager.s_CachedShops.clear();
             WaystoneManager.s_CachedWaystones.clear();
-        }
+        }*/
 
         tickInServer++;
     }
@@ -244,7 +246,8 @@ public class AsmpAddons implements ModInitializer {
             if(foundShops.contains(expectedShop)) continue;
 
             //Send update to server
-            Sender.sendDeleteRequest(expectedShop);
+            // TODO: Re-enable this (disabled for safety while testing)
+            // Sender.sendDeleteRequest(expectedShop);
         }
     }
 }
