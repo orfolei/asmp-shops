@@ -1,4 +1,4 @@
-package dk.nether.asmpaddons.core.exceptions;
+package dk.nether.asmpaddons.data;
 
 public class ShopException extends Exception {
     public ShopException() {

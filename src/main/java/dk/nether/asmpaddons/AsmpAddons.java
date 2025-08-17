@@ -1,12 +1,12 @@
 package dk.nether.asmpaddons;
 
 import dk.nether.asmpaddons.core.ModState;
-import dk.nether.asmpaddons.core.Sender;
+import dk.nether.asmpaddons.utils.Sender;
 import dk.nether.asmpaddons.core.ServerValidator;
 import dk.nether.asmpaddons.core.VersionManagement;
 import dk.nether.asmpaddons.data.ShopDataHolder;
 import dk.nether.asmpaddons.data.ShopDataManager;
-import dk.nether.asmpaddons.core.exceptions.ShopException;
+import dk.nether.asmpaddons.data.ShopException;
 import dk.nether.asmpaddons.data.WaystoneManager;
 import dk.nether.asmpaddons.listeners.ServerConnectionListener;
 import dk.nether.asmpaddons.utils.Utils;

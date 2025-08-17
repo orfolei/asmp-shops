@@ -1,6 +1,5 @@
 package dk.nether.asmpaddons.data;
 
-import dk.nether.asmpaddons.core.exceptions.ShopException;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
