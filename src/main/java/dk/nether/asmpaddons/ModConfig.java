@@ -1,4 +1,4 @@
-package io.github.kreiseljustus.asmpshopget;
+package dk.nether.asmpaddons;
 
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigData;
@@ -11,6 +11,8 @@ public class ModConfig implements ConfigData {
     @ConfigEntry.Category("General")
     @ConfigEntry.Gui.Tooltip
     public boolean enable = true;
+    @ConfigEntry.Category("General")
+    public String serverIp = "https://kreiseljustus.com/asmp/post";
     @ConfigEntry.Category("Tracking")
     @ConfigEntry.Gui.Tooltip
     public boolean trackShops = true;

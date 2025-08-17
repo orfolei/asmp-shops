@@ -1,4 +1,4 @@
-package io.github.kreiseljustus.asmpshopget;
+package dk.nether.asmpaddons;
 
 import org.jetbrains.annotations.NotNull;
 

@@ -1,4 +1,4 @@
-package io.github.kreiseljustus.asmpshopget;
+package dk.nether.asmpaddons;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
@@ -44,7 +44,7 @@ public class WaystoneManager {
 
     public static void waystoneTick(MinecraftClient client) {
 
-        if(!Asmpshopget.s_Config.trackWaystones) return;
+        if(!AsmpAddons.s_Config.trackWaystones) return;
 
         if(client.currentScreen instanceof HandledScreen<?> screen) {
 

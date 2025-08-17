@@ -1,4 +1,4 @@
-package io.github.kreiseljustus.asmpshopget;
+package dk.nether.asmpaddons;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;

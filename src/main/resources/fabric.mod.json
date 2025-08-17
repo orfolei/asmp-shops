@@ -1,21 +1,23 @@
 {
   "schemaVersion": 1,
-  "id": "asmpshopget",
+  "id": "asmpaddons",
   "version": "${version}",
 
-  "name": "asmpshopget",
+  "name": "asmpaddons",
   "description": "POGGIES",
-  "authors": ["Crisel"],
-  "contact": {"homepage":  "https://kreiseljustus.com", "sources":  "https://github.com/Kreiseljustus/asmpshopget"},
+  "authors": ["orfolei", "Crisel"],
+  "contact": {"homepage":  "https://asmp.nether.dk", "sources":  "https://github.com/orfolei/asmp-shops"},
 
   "license": "CC0-1.0",
-  "icon": "assets/asmpshopget/icon.png",
+  "icon": "assets/asmpaddons/icon.png",
 
   "environment": "client",
   "entrypoints": {
-    "main": ["io.github.kreiseljustus.asmpshopget.Asmpshopget"],
+    "main": [
+      "dk.nether.asmpaddons.AsmpAddons"
+    ],
     "modmenu": [
-      "io.github.kreiseljustus.asmpshopget.ModMenu"
+      "dk.nether.asmpaddons.ModMenu"
     ]
   },
 

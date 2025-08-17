@@ -1,6 +1,7 @@
-package io.github.kreiseljustus.asmpshopget;
+package dk.nether.asmpaddons;
 
-import com.mojang.logging.LogUtils;
+import dk.nether.asmpaddons.core.ModState;
+import dk.nether.asmpaddons.listeners.ServerConnectionListener;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.block.BlockState;
@@ -16,13 +17,15 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
-import org.apache.logging.log4j.core.jmx.Server;
 
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Asmpshopget implements ModInitializer {
+public class AsmpAddons implements ModInitializer {
 
     static final String VERSION = "1.1.0";
     static final String VERSION_URL = "https://kreiseljustus.com/asmp_version.txt";
@@ -30,38 +33,33 @@ public class Asmpshopget implements ModInitializer {
     public static ModConfig s_Config;
     public static PlayerEntity s_Player;
 
-    Timer timer = new Timer();
+    private static AsmpAddons instance;
+
+    private ServerConnectionListener serverConnectionListener;
+
+    private ModState state;
+
+    ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
     int tickInServer = 0;
 
     boolean checkedVersionOnStartup = false;
 
-    boolean tempDisable = false;
-
     ChunkPos lastChunkPosition = null;
+
+    public AsmpAddons() {
+        instance = this;
+
+        ModConfig.register();
+        s_Config = ModConfig.get();
+    }
 
     @Override
     public void onInitialize() {
+        this.state = new ModState();
 
-        ModConfig.register();
-
-        s_Config = ModConfig.get();
-
-        ClientTickEvents.END_CLIENT_TICK.register(this::onClientTick);
-
-        ClientTickEvents.END_CLIENT_TICK.register(WaystoneManager::waystoneTick);
-
-        timer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                MinecraftClient client = MinecraftClient.getInstance();
-                if (client == null || client.player == null) return;
-                if (!s_Config.enable || tempDisable) return;
-                if (!s_Config.allowOnAllServers && !Utils.onASMP()) return;
-
-                VersionManagment.checkAndWarnVersion(client.player);
-            }
-        },0,300_000);
+        this.registerListeners();
+        this.registerVersionChecker();
 
         Thread fetcherThread = new Thread(() -> {
             while (true) {
@@ -85,10 +83,28 @@ public class Asmpshopget implements ModInitializer {
         fetcherThread.start();
     }
 
+    private void registerListeners() {
+        this.serverConnectionListener = new ServerConnectionListener();
+
+        ClientTickEvents.END_CLIENT_TICK.register(this::onClientTick);
+        ClientTickEvents.END_CLIENT_TICK.register(WaystoneManager::waystoneTick);
+    }
+
+    private void registerVersionChecker() {
+        scheduler.scheduleAtFixedRate(() -> {
+            if (!state.isActive()) return;
+
+            MinecraftClient client = MinecraftClient.getInstance();
+            if (client == null || client.player == null) return;
+
+            VersionManagment.checkAndWarnVersion(client.player);
+        }, 0, 300, TimeUnit.SECONDS);
+    }
+
+
     public void onClientTick(MinecraftClient client) {
         s_Config = ModConfig.get();
-        if(!s_Config.enable) return;
-        if(tempDisable) return;
+        if(!state.isActive()) return;
         if(client.player == null) return;
         if(!s_Config.allowOnAllServers && !Utils.onASMP()) return;
 
@@ -119,6 +135,10 @@ public class Asmpshopget implements ModInitializer {
         }
 
         tickInServer++;
+    }
+
+    public static ModState getState() {
+        return instance.state;
     }
 
     public void onEnterNewChunk(ChunkPos currentChunk) {

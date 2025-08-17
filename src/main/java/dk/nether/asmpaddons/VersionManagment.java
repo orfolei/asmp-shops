@@ -1,15 +1,11 @@
-package io.github.kreiseljustus.asmpshopget;
+package dk.nether.asmpaddons;
 
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.text.Style;
 import net.minecraft.text.Text;
-import org.apache.logging.log4j.core.tools.picocli.CommandLine;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -29,8 +25,8 @@ public class VersionManagment {
 
     public static boolean isOldVersion() {
         try {
-            int[] latestVersionParts = parseVersion(fetchVersionFromUrl(Asmpshopget.VERSION_URL));
-            int[] currentParts = parseVersion(Asmpshopget.VERSION);
+            int[] latestVersionParts = parseVersion(fetchVersionFromUrl(AsmpAddons.VERSION_URL));
+            int[] currentParts = parseVersion(AsmpAddons.VERSION);
 
             for(int i = 0; i < latestVersionParts.length; i++) {
                 if(latestVersionParts[i] > currentParts[i]) {
