@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Sender {
-    public static final Logger LOGGER = LoggerFactory.getLogger("AtriocSMP Log");
+    private static final Logger LOGGER = LoggerFactory.getLogger(Sender.class.getName());
 
     static Gson gson = new Gson();
 
@@ -51,8 +51,10 @@ public class Sender {
                 LOGGER.info("Request Body: {}", requestBody);
                 LOGGER.info("Post String: {}", postString);
 
-                client.execute(post);
-                LOGGER.info(("Delete request sent"));
+                if (AsmpAddons.getConfig().sendData) {
+                    client.execute(post);
+                    LOGGER.info(("Delete request sent"));
+                }
             } catch (Exception e) {
                 e.printStackTrace();
                 LOGGER.error(e.getMessage());
@@ -63,9 +65,7 @@ public class Sender {
     public static void sendCachedData() {
         List<ShopDataHolder> shops = new ArrayList<>(ShopDataManager.s_CachedShops);
 
-        // TODO: Enable waystone data when duplicate entries have been fixed
-        // List<WaystoneDataHolder> waystones = new ArrayList<>(WaystoneManager.s_CachedWaystones);
-        List<WaystoneDataHolder> waystones = new ArrayList<>();
+        List<WaystoneDataHolder> waystones = new ArrayList<>(WaystoneManager.s_CachedWaystones);
 
         if(shops.isEmpty() && waystones.isEmpty()) {
             Utils.debug("No cached data to send");
@@ -88,8 +88,10 @@ public class Sender {
                 LOGGER.info("Request Body: {}", gson.toJson(packet));
                 LOGGER.info("Post String: {}", postString);
 
-                client.execute(post);
-                LOGGER.info("Shop & waystone data request sent.");
+                if (AsmpAddons.getConfig().sendData) {
+                    client.execute(post);
+                    LOGGER.info("Shop & waystone data request sent.");
+                }
             } catch (Exception e) {
                 e.printStackTrace();
                 LOGGER.error(e.getMessage());

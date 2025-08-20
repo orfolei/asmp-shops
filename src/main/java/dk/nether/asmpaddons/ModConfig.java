@@ -30,6 +30,8 @@ public class ModConfig implements ConfigData {
     @ConfigEntry.Category("Dev")
     public boolean enableDebugMode = false;
     @ConfigEntry.Category("Dev")
+    public boolean sendData = false;
+    @ConfigEntry.Category("Dev")
     public boolean allowOnAllServers = false;
     @ConfigEntry.Category("Dev")
     public String shopRoute = "https://kreiseljustus.com/asmp/api/shops";

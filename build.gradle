@@ -92,7 +92,3 @@ publishing {
         // retrieving dependencies.
     }
 }
-
-loom {
-    log4jConfigs.from(file("src/main/resources/log4j2-asmp-addons.xml"))
-}

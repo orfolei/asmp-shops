@@ -1,5 +1,7 @@
 {
   "text.autoconfig.asmpshopget.option.enableDebugMode": "Enable Debug Mode",
+  "text.autoconfig.asmpshopget.option.sendData": "Send collected data to website",
+  "text.autoconfig.asmpshopget.option.serverIp": "AtriocSMP Server Address",
   "text.autoconfig.asmpshopget.option.postUrl": "Server URL",
   "text.autoconfig.asmpshopget.option.ticksBetweenSends": "Ticks between sending updates",
   "text.autoconfig.asmpshopget.title": "ASMP ShopGet (send help)",
