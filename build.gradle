@@ -16,6 +16,18 @@ repositories {
         url = "https://maven.terraformersmc.com/"
     }
 
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = "Modrinth"
+                url = "https://api.modrinth.com/maven"
+            }
+        }
+        filter {
+            includeGroup "maven.modrinth"
+        }
+    }
+
     maven { url "https://maven.shedaniel.me/" }
 }
 
@@ -28,6 +40,8 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
     modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}")
+    modImplementation "maven.modrinth:xaeros-world-map:1.39.12_Fabric_1.21.7"
+    modImplementation "maven.modrinth:xaeros-minimap:25.2.10_Fabric_1.21.7"
 
     modApi "me.shedaniel.cloth:cloth-config-fabric:19.0.147"
     modImplementation "com.ptsmods:devlogin:3.5"

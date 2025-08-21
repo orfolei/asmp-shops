@@ -14,6 +14,9 @@ import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.screen.v1.ScreenKeyboardEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SignBlock;
 import net.minecraft.block.WallSignBlock;
@@ -21,12 +24,18 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.block.entity.SignText;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.option.KeyBinding;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.decoration.DisplayEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.AffineTransformation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.math.ColorHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+import org.joml.Vector3f;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -46,7 +55,6 @@ public class AsmpAddons implements ModInitializer {
     private ModState state;
     private ServerConnectionListener serverConnectionListener;
     private VersionManagement versionManagement;
-
 
     int tickInServer = 0;
 
@@ -97,6 +105,34 @@ public class AsmpAddons implements ModInitializer {
 
         ClientTickEvents.END_CLIENT_TICK.register(this::onClientTick);
         ClientTickEvents.END_CLIENT_TICK.register(WaystoneManager::waystoneTick);
+
+        ServerEntityEvents.ENTITY_LOAD.register((entity, world) -> {
+            if (!(entity instanceof DisplayEntity waystoneEntity))
+                return;
+
+            if (waystoneEntity.getName().getSiblings().isEmpty())
+                return;
+
+            s_Player = MinecraftClient.getInstance().player;
+
+            AffineTransformation transformation = DisplayEntity.getTransformation(waystoneEntity.getDataTracker());
+
+            Vector3f scale = transformation.getScale();
+            Vector3f translation = transformation.getTranslation();
+
+            String waystoneId = waystoneEntity.getName().getSiblings().getFirst().getString();
+
+            waystoneEntity.setGlowing(true);
+            waystoneEntity.setGlowColorOverride(ColorHelper.getArgb(255, 0, 255));
+            waystoneEntity.setViewRange(512);
+
+            Utils.debug(String.format("Waystone entity loaded! Id: %s, pos: %s, scale: (%.2f, %.2f, %.2f), translation: (%.2f, %.2f, %.2f)",
+                    waystoneId, waystoneEntity.getPos(),
+                    scale.x, scale.y, scale.z,
+                    translation.x, translation.y, translation.z));
+
+            System.out.println("are we still good?");
+        });
     }
 
 
@@ -152,6 +188,8 @@ public class AsmpAddons implements ModInitializer {
     }
 
     private void handleShopDetection(ChunkPos currentChunk) {
+
+
         World world = s_Player.getWorld();
 
         Chunk chunk = world.getChunk(currentChunk.getStartPos());
@@ -159,22 +197,23 @@ public class AsmpAddons implements ModInitializer {
         List<ShopDataHolder> foundShops = new ArrayList<>();
 
         for (BlockPos pos : chunk.getBlockEntityPositions()) {
+
             BlockEntity entity = world.getBlockEntity(pos);
-            Utils.debug("Entity: " + entity.getType().getRegistryEntry());
-            Utils.debug("EntityPos: " + entity.getPos());
+            //Utils.debug("Entity: " + entity.getType().getRegistryEntry());
+            //Utils.debug("EntityPos: " + entity.getPos());
 
             if (!(entity instanceof SignBlockEntity)) {
-                Utils.debug("No SignBlockEntity here");
+                //Utils.debug("No SignBlockEntity here");
                 continue;
             }
 
             SignBlockEntity sign = (SignBlockEntity) entity;
             BlockState blockState = world.getBlockState(pos);
 
-            Utils.debug("Block at pos: " + pos + " is " + blockState.getBlock().getTranslationKey());
+            //Utils.debug("Block at pos: " + pos + " is " + blockState.getBlock().getTranslationKey());
 
             if (!(blockState.getBlock() instanceof SignBlock || blockState.getBlock() instanceof WallSignBlock)) {
-                Utils.debug("No SignBlock here");
+                //Utils.debug("No SignBlock here");
                 continue;
             }
 
@@ -190,7 +229,7 @@ public class AsmpAddons implements ModInitializer {
             if(sellBuyOOS.isEmpty()) continue;
 
             if (!(sellBuyOOS.contains("Selling") || sellBuyOOS.contains("Buying") || sellBuyOOS.contains("Out of Stock"))) {
-                Utils.debug("not selling, buying, oos");
+                //Utils.debug("not selling, buying, oos");
                 continue;
             }
 
@@ -246,5 +285,9 @@ public class AsmpAddons implements ModInitializer {
             //Send update to server
             Sender.sendDeleteRequest(expectedShop);
         }
+    }
+
+    public static AsmpAddons getInstance() {
+        return instance;
     }
 }

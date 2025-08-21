@@ -8,7 +8,12 @@ import net.minecraft.text.Text;
 
 public class Utils {
     public static void debug(String message) {
-        if(!AsmpAddons.getConfig().enableDebugMode || !AsmpAddons.getConfig().enable) return;
+        if(!AsmpAddons.getConfig().enableDebugMode || !AsmpAddons.getConfig().enable)
+            return;
+
+        if (AsmpAddons.s_Player == null)
+            return;
+
         AsmpAddons.s_Player.sendMessage(Text.of(message), false);
     }
 }
