@@ -13,12 +13,12 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 
 public class ServerConnectionListener {
-    public ServerConnectionListener() {
-        ClientPlayConnectionEvents.JOIN.register(this::onJoinServer);
-        ClientPlayConnectionEvents.DISCONNECT.register(this::onDisconnect);
+    public static void registerListeners() {
+        ClientPlayConnectionEvents.JOIN.register(ServerConnectionListener::onJoinServer);
+        ClientPlayConnectionEvents.DISCONNECT.register(ServerConnectionListener::onDisconnect);
     }
 
-    private void onJoinServer(ClientPlayNetworkHandler handler, PacketSender sender, MinecraftClient client) {
+    private static void onJoinServer(ClientPlayNetworkHandler handler, PacketSender sender, MinecraftClient client) {
         String serverIp = AsmpAddons.getConfig().serverIp;
         ServerInfo serverInfo = client.getCurrentServerEntry();
 
@@ -33,7 +33,7 @@ public class ServerConnectionListener {
         }
     }
 
-    private void onDisconnect(ClientPlayNetworkHandler handler, MinecraftClient client) {
+    private static void onDisconnect(ClientPlayNetworkHandler handler, MinecraftClient client) {
         AsmpAddons.getState().setOnServer(false);
     }
 }

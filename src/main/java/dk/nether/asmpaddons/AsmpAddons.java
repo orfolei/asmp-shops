@@ -53,7 +53,6 @@ public class AsmpAddons implements ModInitializer {
 
     private ModConfig config;
     private ModState state;
-    private ServerConnectionListener serverConnectionListener;
     private VersionManagement versionManagement;
 
     int tickInServer = 0;
@@ -70,6 +69,8 @@ public class AsmpAddons implements ModInitializer {
     public void onInitialize() {
         AutoConfig.register(ModConfig.class, GsonConfigSerializer::new);
         this.config = AutoConfig.getConfigHolder(ModConfig.class).getConfig();
+
+        //Waypoint
 
         this.state = new ModState();
         this.versionManagement = new VersionManagement();
@@ -101,7 +102,7 @@ public class AsmpAddons implements ModInitializer {
     }
 
     private void registerListeners() {
-        this.serverConnectionListener = new ServerConnectionListener();
+        ServerConnectionListener.registerListeners();
 
         ClientTickEvents.END_CLIENT_TICK.register(this::onClientTick);
         ClientTickEvents.END_CLIENT_TICK.register(WaystoneManager::waystoneTick);
